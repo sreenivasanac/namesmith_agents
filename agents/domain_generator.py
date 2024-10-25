@@ -31,7 +31,8 @@ Your task is to generate high-quality, brandable domain names based on the infor
 about existing successful companies.
 
 A good domain name has the following qualities:
-- Short (preferably less than 10 characters, but up to 15 is acceptable)
+- Short (preferably less than 10 characters, but up to 12 is acceptable)
+- the length of TLD is not counted towards the total length. rippling.com length is 8
 - Brandable and unique
 - Pronounceable
 - Memorable
@@ -49,8 +50,12 @@ but should be entirely new and unique names, not variations of existing ones.
 
 Only generate .com and .ai TLDs.
 
-For each suggested domain, provide a brief explanation of why it's suitable and how it
-relates to the AI SaaS B2B Enterprise space.
+Generate brandable names, avoid combination of two words. Avoid simple combination of two words.
+If the domain name has to have AI in the main name, then choose .ai TLD instead of having AI in the main domain name.
+For example instead of laminarAI.com, choose laminar.ai.
+
+For each suggested domain, provide a detailed explanation of why it's suitable and how it
+relates to the SaaS Enterprise space.
 
 System time: {system_time}
 

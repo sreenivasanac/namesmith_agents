@@ -21,7 +21,6 @@ class DomainScore(BaseModel):
     pronounceability: int = Field(description="Score for pronounceability (1-10)", ge=1, le=10)
     length: int = Field(description="Score for length (1-10)", ge=1, le=10)
     brandability: int = Field(description="Score for brandability (1-10)", ge=1, le=10)
-    total_score: int = Field(description="Total score (sum of all metrics)")
     explanation: str = Field(description="Detailed explanation for the scores")
 
 class DomainEvaluation(BaseModel):
@@ -34,12 +33,17 @@ class DomainEvaluationSet(BaseModel):
 domain_eval_parser = PydanticOutputParser(pydantic_object=DomainEvaluationSet)
 
 eval_template = """
-You are an expert in domain name evaluation with extensive experience in branding and marketing. Your task is to evaluate the given domain name based on four key metrics: memorability, pronounceability, length, and brandability. Each metric should be scored on a scale of 1-10, where 1 is poor and 10 is excellent.
+You are an expert in domain name evaluation with extensive experience in
+branding and marketing. Your task is to evaluate the given domain name based
+on four key metrics: memorability, pronounceability, length, and brandability.
+Each metric should be scored on a scale of 1-10, where
+1 is poor and 10 is excellent.
 
 Domain to evaluate: {domain}
 Description: {description}
 
-Please think through each metric carefully and provide a detailed explanation for your scoring. Use the following guidelines:
+Please think through each metric carefully and provide a detailed explanation for your scoring.
+Use the following guidelines:
 
 1. Memorability (1-10):
    - Consider how easily the domain can be remembered after hearing it once.
@@ -66,8 +70,6 @@ For each metric, think step-by-step:
 2. What are the potential drawbacks?
 3. How does it compare to ideal domains in this space?
 4. What's the final score based on these considerations?
-
-After evaluating each metric, sum up the scores to get a total score out of 40.
 
 Provide a detailed explanation for your scoring, highlighting key points that influenced your decision.
 
@@ -96,7 +98,8 @@ def evaluate_domain_set(domain_set):
 
 @tool
 def get_domain_evaluations(domain_set):
-    """Evaluate a set of domain suggestions based on memorability, pronounceability, length, and brandability."""
+    """Evaluate a set of domain suggestions based on
+    memorability, pronounceability, length, and brandability."""
     return evaluate_domain_set(domain_set)
 
 domain_evaluation_tool = Tool(

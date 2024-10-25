@@ -68,3 +68,12 @@ For a complete list of dependencies, refer to the `requirements.txt` file.
 ## Note
 
 This system uses the OpenAI GPT-4o model, which may incur costs. Make sure you understand the pricing and usage limits of the OpenAI API before running the script.
+
+## Environment Variables
+
+This project requires the following environment variables:
+
+- `OPENAI_API_KEY`: Your OpenAI API key
+- `WHOISJSON_API_KEY`: Your WHOISJSON API key for domain availability checking
+
+Create a `.env` file in the root directory of the project and add these variables:

@@ -164,3 +164,6 @@ cython_debug/
 
 # VSCode local settings
 .vscode/
+
+# python virtual environment
+myenv/
