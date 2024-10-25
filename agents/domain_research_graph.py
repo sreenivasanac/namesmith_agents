@@ -79,58 +79,56 @@ def route(state: State) -> str:
     else:
         return "end_process"
 
+def save_domain_to_db(domain_info):
+    # Create DomainName object
+    domain_name = DomainName(
+        domainName=domain_info.domain,
+        tld=domain_info.domain.split('.')[-1],
+        length=len(domain_info.domain.split('.')[0]),
+        processedByAgent="DomainResearchGraph",
+        agentModel="GPT-4"
+    )
+    
+    # Create domain in the database
+    created_domain = create_domain(domain_name.dict())
+    
+    if created_domain:
+        # Create DNAvailabilityStatus object
+        availability_status = DNAvailabilityStatus(
+            domainName=domain_info.domain,
+            status="Available",
+            processedByAgent="ProcessAvailableDomains",
+            agentModel="GPT-4"
+        )
+        create_availability_status(availability_status.dict())
+        
+        # Create DNEvaluation object
+        evaluation = DNEvaluation(
+            domainName=domain_info.domain,
+            possibleCategories=domain_info.scores.categories,
+            possibleKeywords=domain_info.scores.keywords,
+            memorabilityScore=domain_info.scores.memorability,
+            pronounceabilityScore=domain_info.scores.pronounceability,
+            brandabilityScore=domain_info.scores.brandability,
+            description=domain_info.scores.explanation,
+            processedByAgent="DomainResearchGraph",
+            agentModel="GPT-4"
+        )
+        create_evaluation(evaluation.dict())
+        
+        print(f"Processed and saved domain: {domain_info.domain}")
+        return True
+    else:
+        print(f"Failed to save domain: {domain_info.domain}")
+        return False
+
 def process_available_domains(state: State) -> dict:
     print("Processing available domains...")
-    for domain in state['available_domains']:
-        domain_info = next((d for d in state['scored_domains'].evaluations if d.domain == domain), None)
+    for available_domain in state['available_domains']:
+        domain_info = next((d for d in state['scored_domains'].evaluations if d.domain == available_domain), None)
         if domain_info:
-            domain_name = DomainName(
-                domainName=domain_info.domain,
-                tld=domain_info.domain.split('.')[-1],
-                length=len(domain_info.domain.split('.')[0]),
-                processedByAgent="DomainResearchGraph",
-                agentModel="GPT-4"
-            )
-
-            availability_status = DNAvailabilityStatus(
-                domainName=domain_info.domain,
-                status="Available",
-                processedByAgent="ProcessAvailableDomains",
-                agentModel="GPT-4"
-            )
-
-            evaluation = DNEvaluation(
-                domainName=domain_info.domain,
-                possibleCategories=[],  # You need to populate this
-                possibleKeywords=[],  # You need to populate this
-                memorabilityScore=domain_info.scores.memorability,
-                pronounceabilityScore=domain_info.scores.pronounceability,
-                brandabilityScore=domain_info.scores.brandability,
-                description=domain_info.scores.explanation,
-                overallScore=sum([domain_info.scores.memorability, domain_info.scores.pronounceability, domain_info.scores.brandability]),
-                processedByAgent="DomainResearchGraph",
-                agentModel="GPT-4"
-            )
-
-            # SEO analysis is not performed in the current workflow, so we'll leave it as None
-
-            domain_with_details = DomainWithDetails(
-                domainName=domain_name,
-                availabilityStatus=availability_status,
-                evaluation=evaluation,
-                seoAnalysis=None
-            )
-            # Here, you would typically save this to a database
-            # For now, we'll just print it
-
-            print(f"Processed domain: {domain_with_details.domainName.domainName}")
-            print(f"Availability: {domain_with_details.availabilityStatus.status}")
-            print(f"Evaluation scores: Memorability: {domain_with_details.evaluation.memorabilityScore}, "
-                  f"Pronounceability: {domain_with_details.evaluation.pronounceabilityScore}, "
-                  f"Brandability: {domain_with_details.evaluation.brandabilityScore}")
-
+            save_domain_to_db(domain_info)
     return state
-
 
 def end_process(state: State) -> dict:
     print("Ending process...")
@@ -138,7 +136,17 @@ def end_process(state: State) -> dict:
 
 def create_domain(domain_data):
     response = requests.post(f"{BASE_URL}/domains", json=domain_data)
-    print(f"API Response: Status {response.status_code}, Content: {response.text}")
+    print(f"API Response for create_domain: Status {response.status_code}, Content: {response.text}")
+    return response.json() if response.ok else None
+
+def create_availability_status(status_data):
+    response = requests.post(f"{BASE_URL}/availability-status", json=status_data)
+    print(f"API Response for create_availability_status: Status {response.status_code}, Content: {response.text}")
+    return response.json() if response.ok else None
+
+def create_evaluation(evaluation_data):
+    response = requests.post(f"{BASE_URL}/evaluation", json=evaluation_data)
+    print(f"API Response for create_evaluation: Status {response.status_code}, Content: {response.text}")
     return response.json() if response.ok else None
 
 # Create the graph

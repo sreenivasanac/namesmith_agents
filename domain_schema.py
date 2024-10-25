@@ -15,6 +15,7 @@ class DNAvailabilityStatus(BaseModel):
     processedByAgent: str
     agentModel: str
 
+
 class DNEvaluation(BaseModel):
     domainName: str
     possibleCategories: List[str]
@@ -23,7 +24,6 @@ class DNEvaluation(BaseModel):
     pronounceabilityScore: int
     brandabilityScore: int
     description: str
-    overallScore: int
     processedByAgent: str
     agentModel: str
 

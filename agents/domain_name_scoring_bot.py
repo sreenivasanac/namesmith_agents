@@ -22,6 +22,8 @@ class DomainScore(BaseModel):
     length: int = Field(description="Score for length (1-10)", ge=1, le=10)
     brandability: int = Field(description="Score for brandability (1-10)", ge=1, le=10)
     explanation: str = Field(description="Detailed explanation for the scores")
+    categories: List[str] = Field(description="List of categories the domain belongs to")
+    keywords: List[str] = Field(description="List of keywords the domain belongs to")
 
 class DomainEvaluation(BaseModel):
     domain: str = Field(description="The evaluated domain name")
@@ -64,6 +66,10 @@ Use the following guidelines:
    - Assess how well the domain represents a unique brand identity.
    - Consider if it's relevant to the AI SaaS B2B Enterprise space.
    - Evaluate its potential for building a strong brand around it.
+5. Come up with a list of categories and keywords that the domain belongs to.
+
+Categories example: ["HealthTech", "AI", "SaaS", "B2B", "Enterprise"]
+
 
 For each metric, think step-by-step:
 1. What are the positive aspects?
