@@ -9,6 +9,8 @@ An intelligent multi-agent system that automates the generation, evaluation, and
 - [Dashboard console UI Codebase](https://github.com/sreenivasanac/namesmith_console)
 - [Agents Codebase](https://github.com/sreenivasanac/namesmith_agents)
 
+
+
 ## System Architecture
 
 The system is built using LangGraph, a library for creating multi-agent workflows. The main orchestration logic is defined in `agents/domain_research_graph.py`, which coordinates the following specialized agents:
@@ -42,6 +44,8 @@ The system is built using LangGraph, a library for creating multi-agent workflow
    - Saves domain information through REST API endpoints
    - Stores domain details, availability status, and evaluation scores
    - Uses Pydantic models for data validation
+
+![Namesmith Agent Workflow](images/agents_workflow.jpeg)
 
 ## Data Models
 
